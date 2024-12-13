@@ -9,6 +9,10 @@ public class DoNTimes {
      * @param n    the number of times to execute the function
      */
     public static void doNTimes(Runnable func, int n) {
+        while (n > 0){
+            func.run();
+            n-=1;
+        }
 
     }
 
