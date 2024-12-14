@@ -9,6 +9,14 @@ public class MatrixRotate {
      */
     public static void rotateMatrix(int[][] matrix) {
 
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                int temp = matrix[i][j];
+                matrix[j][j] = matrix[i][j+2-i];
+                matrix[i][j+2-i] = temp;
+            }
+        }
+
     }
 
     public static void main(String[] args) {

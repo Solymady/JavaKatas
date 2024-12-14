@@ -9,6 +9,8 @@ public class LongestCommonPrefix {
      * @return the longest common prefix, or an empty string if none exists
      */
     public static String longestCommonPrefix(String[] strs) {
+
+
         return "";
     }
 
