@@ -16,7 +16,9 @@ public class ListFlatten {
 
         for (Object o : nestedList) {
             if (o instanceof List<?>) {
-                list.addAll(flattenList((List<Object>) o));//test
+                list.addAll(flattenList((List<Object>) o));
+
+                //test1
             }else {
                 list.add(Integer.parseInt(o.toString()));
             }
