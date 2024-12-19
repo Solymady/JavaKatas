@@ -3,7 +3,7 @@ package katas.exercises;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-public class countWordsTest {
+public class WordCounterTest {
 
     @Test
     public void testCountWords_basicSentence() {
