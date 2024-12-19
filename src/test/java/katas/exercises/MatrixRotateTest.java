@@ -17,6 +17,7 @@ class MatrixRotateTest {
                 {7, 4, 1},
                 {8, 5, 2},
                 {9, 6, 3}
+
         };
 
         MatrixRotate.rotateMatrix(matrix);
