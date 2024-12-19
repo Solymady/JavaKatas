@@ -9,7 +9,7 @@ import java.io.PrintStream;
 public class DoNTimesTest {
 
     @Test
-    public void doNTimesTest() {
+     void doNTimesTest() {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
