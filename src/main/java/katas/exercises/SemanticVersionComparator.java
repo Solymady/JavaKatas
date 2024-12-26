@@ -10,6 +10,18 @@ public class SemanticVersionComparator {
      * @return -1 if version1 < version2, 1 if version1 > version2, 0 if they are equal
      */
     public static int compareVersions(String version1, String version2) {
+
+        if(version1.equals(version2)){
+            return 0;
+        }
+        int v1=Integer.parseInt(version1.replace(".", ""));
+        int v2=Integer.parseInt(version2.replace(".", ""));
+        if(v1<v2){
+            return -1;
+        }
+        if(v1>v2){
+            return 1;
+        }
         return 0;
     }
 
@@ -17,5 +29,6 @@ public class SemanticVersionComparator {
         System.out.println(compareVersions("1.0.0", "1.0.1")); // Expected: -1
         System.out.println(compareVersions("2.1.0", "1.9.9")); // Expected: 1
         System.out.println(compareVersions("1.2.3", "1.2.3")); // Expected: 0
+
     }
 }
