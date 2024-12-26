@@ -1,5 +1,6 @@
 package katas.exercises;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 public class MaxStorageCapacity {
@@ -21,6 +22,14 @@ public class MaxStorageCapacity {
      */
     public static int maxStorageArea(int[] containers) {
         // Hint for efficient implementation: stack
+        HashMap<Integer, Integer[]> heightMap = new HashMap<>();
+        int max = 0;
+        int len = containers.length;
+
+        for (int i = 0; i < len; i++) {
+
+
+        }
         return 0;
     }
 
