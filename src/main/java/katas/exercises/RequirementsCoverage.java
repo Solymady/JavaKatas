@@ -1,6 +1,9 @@
 package katas.exercises;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RequirementsCoverage {
 
@@ -23,8 +26,36 @@ public class RequirementsCoverage {
      * @return a list of indices of the minimal subset of test cases that covers all requirements
      */
     public static List<Integer> selectMinimalTestCases(List<List<Integer>> testCases) {
-        return null;
+        int n = testCases.size();
+        Set<Integer> allRequirements = new HashSet<>();
+        for (List<Integer> testCase : testCases) {
+            allRequirements.addAll(testCase);
+        }
+
+        List<Integer> bestSubset = null;
+
+        // Iterate through all subsets of test cases
+        for (int subset = 0; subset < (1 << n); subset++) {
+            Set<Integer> covered = new HashSet<>();
+            List<Integer> currentSubset = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                if ((subset & (1 << i)) != 0) {
+                    covered.addAll(testCases.get(i));
+                    currentSubset.add(i);
+                }
+            }
+
+            if (covered.containsAll(allRequirements)) {
+                if (bestSubset == null || currentSubset.size() < bestSubset.size()) {
+                    bestSubset = new ArrayList<>(currentSubset);
+                }
+            }
+        }
+
+        return bestSubset;
     }
+
 
     public static void main(String[] args) {
         List<List<Integer>> testCases = List.of(
