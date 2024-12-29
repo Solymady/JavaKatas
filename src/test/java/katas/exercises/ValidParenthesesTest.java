@@ -6,7 +6,7 @@ import static katas.exercises.ValidParentheses.isValidParentheses;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class isValidParenthesesTest {
+public class ValidParenthesesTest {
 
     @Test
     public void isValid1() {
