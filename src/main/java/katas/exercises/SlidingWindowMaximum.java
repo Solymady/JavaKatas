@@ -1,5 +1,8 @@
 package katas.exercises;
 
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SlidingWindowMaximum {
@@ -16,10 +19,33 @@ public class SlidingWindowMaximum {
      * @param k the size of the sliding window
      * @return a list of the maximum values in each window
      */
-    public static List<Integer> maxSlidingWindow(int[] nums, int k) {
-        return null;
-    }
 
+    public static List<Integer> maxSlidingWindow(int[] nums, int k) {
+        List<Integer> result = new ArrayList<>();
+        if (nums == null || nums.length == 0 || k <= 0) {
+            return result;
+        }
+
+        Deque<Integer> deque = new LinkedList<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
+                deque.pollFirst();
+            }
+
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.pollLast();
+            }
+
+            deque.offerLast(i);
+
+            if (i >= k - 1) {
+                result.add(nums[deque.peekFirst()]);
+            }
+        }
+
+        return result;
+    }
     public static void main(String[] args) {
         int[] nums = {1, 3, -1, -3, 5, 3, 6, 7};
         int k = 3;
