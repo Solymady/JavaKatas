@@ -34,6 +34,7 @@ public class NginxLogsParser {
     public static Map<String, String> parseLog(String log) {
         Map<String, String> parsedData = new HashMap<>();
 
+        // Updated regex pattern
         String regex =
                 "(\\d+\\.\\d+\\.\\d+\\.\\d+)\\s-\\s-\\s" + // client_ip
                         "\\[([\\w:/]+\\s[+\\-]\\d{4})\\]\\s" + // date
@@ -42,9 +43,8 @@ public class NginxLogsParser {
                         "(HTTP\\/\\d\\.\\d+)\"\\s" + // http_version
                         "(\\d{3})\\s" + // status
                         "(\\d+)\\s" + // response_bytes
-                        "\"([^\"]+)\"\\s" + // user_agent
-                        "\"([^\"]+)\""; // second user_agent, or "-"
-
+                        "\"([^\"]*)\"\\s" + // user_agent (can be "-" or any valid string)
+                        "\"([^\"]*)\""; // second user_agent or "-"
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(log);
@@ -65,12 +65,17 @@ public class NginxLogsParser {
         return parsedData;
     }
 
+
     public static void main(String[] args) {
         String logEntry = "122.176.223.47 - - [05/Feb/2024:08:29:40 +0000] " +
                 "\"GET /web-enabled/Enhanced-portal/bifurcated-forecast.js HTTP/1.1\" 200 1684 " +
                 "\"-\" \"Opera/9.58 (X11; Linux i686; en-US) Presto/2.12.344 Version/13.00\"";
 
-        Map<String, String> parsedLog = parseLog(logEntry);
+        String logEntry1 = "122.176.223.47 - - [05/Feb/2024:08:29:40 +0000] " +
+                "\"POST /api/v1/resource HTTP/2.0\" 404 2048 " +
+                "\"-\" \" Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36\"";
+
+        Map<String, String> parsedLog = parseLog(logEntry1);
         System.out.println("Parsed log data: " + parsedLog);
     }
 }
