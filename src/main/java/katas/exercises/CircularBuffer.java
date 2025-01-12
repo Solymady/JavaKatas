@@ -1,18 +1,12 @@
 package katas.exercises;
 
 public class CircularBuffer {
-    /**
-     * Design a circular buffer (ring buffer).
-     *
-     * The buffer should operate in constant time.
-     * When the buffer is full, adding a new element should overwrite the oldest element.
-     *
-     */
 
     private int[] buffer;
     private int head;
     private int tail;
     private int size;
+    private int capacity;
 
     /**
      * Initializes the circular buffer with a fixed capacity.
@@ -20,7 +14,11 @@ public class CircularBuffer {
      * @param capacity the maximum number of elements the buffer can hold
      */
     public CircularBuffer(int capacity) {
-
+        this.capacity = capacity;
+        this.buffer = new int[capacity];
+        this.head = 0;
+        this.tail = 0;
+        this.size = 0;
     }
 
     /**
@@ -29,7 +27,14 @@ public class CircularBuffer {
      * @param val the value to add
      */
     public void add(int val) {
+        buffer[tail] = val;
+        tail = (tail + 1) % capacity;
 
+        if (size == capacity) {
+            head = (head + 1) % capacity; // Overwrite the oldest element
+        } else {
+            size++;
+        }
     }
 
     /**
@@ -38,8 +43,14 @@ public class CircularBuffer {
      * @return the oldest element, or -1 if the buffer is empty
      */
     public int get() {
+        if (isEmpty()) {
+            return -1; // Buffer is empty
+        }
 
-        return -1;
+        int value = buffer[head];
+        head = (head + 1) % capacity;
+        size--;
+        return value;
     }
 
     /**
@@ -48,8 +59,7 @@ public class CircularBuffer {
      * @return true if the buffer is full, false otherwise
      */
     public boolean isFull() {
-
-        return false;
+        return size == capacity;
     }
 
     /**
@@ -58,8 +68,7 @@ public class CircularBuffer {
      * @return true if the buffer is empty, false otherwise
      */
     public boolean isEmpty() {
-
-        return false;
+        return size == 0;
     }
 
     public static void main(String[] args) {
@@ -75,5 +84,3 @@ public class CircularBuffer {
         System.out.println(buffer.isFull()); // Output: true
     }
 }
-
-

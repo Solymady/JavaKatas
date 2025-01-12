@@ -1,9 +1,10 @@
 package katas.exercises;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoundRobinLoadBalancer {
+
     /**
      * In distributed systems, a load balancer is responsible for distributing incoming requests to multiple server instances.
      * A round-robin load balancer assigns requests to server instances in a circular order.
@@ -16,14 +17,15 @@ public class RoundRobinLoadBalancer {
      *  - Return null when no servers are available.
      */
 
-    private  List<IP> servers;
+    private List<IP> servers;
     private int currentIndex;
 
     /**
      * Constructor to initialize the load balancer.
      */
     public RoundRobinLoadBalancer() {
-
+        this.servers = new ArrayList<>();
+        this.currentIndex = 0;
     }
 
     /**
@@ -32,7 +34,9 @@ public class RoundRobinLoadBalancer {
      * @param server the IP object representing the server to add
      */
     public void addServer(IP server) {
-
+        if (!servers.contains(server)) {
+            servers.add(server);
+        }
     }
 
     /**
@@ -41,7 +45,10 @@ public class RoundRobinLoadBalancer {
      * @param server the IP object representing the server to remove
      */
     public void removeServer(IP server) {
-
+        servers.remove(server);
+        if (currentIndex >= servers.size()) {
+            currentIndex = 0; // Reset index if it goes out of bounds
+        }
     }
 
     /**
@@ -50,7 +57,12 @@ public class RoundRobinLoadBalancer {
      * @return the IP object of the server handling the request
      */
     public IP routeRequest() {
-
+        if (servers.isEmpty()) {
+            return null;
+        }
+        IP server = servers.get(currentIndex);
+        currentIndex = (currentIndex + 1) % servers.size();
+        return server;
     }
 
     public static void main(String[] args) {
@@ -74,7 +86,7 @@ public class RoundRobinLoadBalancer {
     /**
      * Represents an IP address.
      */
-    class IP {
+    static class IP {
         private final String address;
 
         /**
@@ -86,6 +98,7 @@ public class RoundRobinLoadBalancer {
             if (!isValidIP(address)) {
                 throw new IllegalArgumentException("Invalid IP address: " + address);
             }
+            this.address = address;
         }
 
         /**
@@ -95,7 +108,18 @@ public class RoundRobinLoadBalancer {
          * @return true if the address is valid, false otherwise
          */
         private static boolean isValidIP(String address) {
-
+            String regex = "^(\\d{1,3}\\.){3}\\d{1,3}$";
+            if (!address.matches(regex)) {
+                return false;
+            }
+            String[] parts = address.split("\\.");
+            for (String part : parts) {
+                int num = Integer.parseInt(part);
+                if (num < 0 || num > 255) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         @Override
@@ -113,10 +137,7 @@ public class RoundRobinLoadBalancer {
 
         @Override
         public int hashCode() {
-
+            return address.hashCode();
         }
     }
-
 }
-
-
