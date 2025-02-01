@@ -20,9 +20,35 @@ package katas.exercises;
  */
 public class KthSmallestElementInBST {
 
-    public static int kthSmallest(TreeNode root, int k) {
-        return -1;
-    }
+        private static int count = 0;
+        private static int result = -1;
+
+        /** Helper function for in-order traversal **/
+        private static void inOrder(TreeNode node, int k) {
+            if (node == null || count >= k) return;
+
+            // Left subtree (smaller elements)
+            inOrder(node.left, k);
+
+            // Process current node
+            count++;
+            if (count == k) {
+                result = node.val;
+                return;
+            }
+
+            // Right subtree (larger elements)
+            inOrder(node.right, k);
+        }
+
+        /** Main function to find kth smallest element **/
+        public static int kthSmallest(TreeNode root, int k) {
+            count = 0;
+            result = -1;
+            inOrder(root, k);
+            return result;
+        }
+
 
     public static void main(String[] args) {
         TreeNode root = new TreeNode(5);

@@ -37,61 +37,71 @@ import java.util.List;
  */
 public class MovieRentalCustomer {
 
+
+
+
+
     private String _name;
     private List<Rental> _rentals = new ArrayList<Rental>();
 
     public MovieRentalCustomer(String name) {
+
         _name = name;
     }
 
     public void addRental(Rental arg) {
+
         _rentals.add(arg);
     }
 
     public String getName() {
+
         return _name;
     }
 
-    public String statement() {
+
+    public String generateTextStatement() {
         double totalAmount = 0;
         int frequentRenterPoints = 0;
-        String result = "Rental Record for " + getName() + "\n";
+        StringBuilder result = new StringBuilder("Rental Record for " + getName() + "\n");
 
-        for (Rental each : _rentals) {
-            double thisAmount = 0;
+        for (Rental rental : _rentals) {
+            double thisAmount = rental.getMovie().getCharge(rental.getDaysRented());
+            frequentRenterPoints += rental.getMovie().getFrequentRenterPoints(rental.getDaysRented());
 
-            //determine amounts for each line
-            switch (each.getMovie().getPriceCode()) {
-                case Movie.REGULAR:
-                    thisAmount += 2;
-                    if (each.getDaysRented() > 2)
-                        thisAmount += (each.getDaysRented() - 2) * 1.5;
-                    break;
-                case Movie.NEW_RELEASE:
-                    thisAmount += each.getDaysRented() * 3;
-                    break;
-                case Movie.CHILDRENS:
-                    thisAmount += 1.5;
-                    if (each.getDaysRented() > 3)
-                        thisAmount += (each.getDaysRented() - 3) * 1.5;
-                    break;
-            }
+            result.append("\t").append(rental.getMovie().getTitle())
+                    .append("\t").append(thisAmount).append("\n");
 
-            // add frequent renter points
-            frequentRenterPoints++;
-            // add bonus for a two day new release rental
-            if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) && each.getDaysRented() > 1)
-                frequentRenterPoints++;
-
-            // show figures for this rental
-            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
             totalAmount += thisAmount;
         }
 
-        // add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
+        result.append("Amount owed is ").append(totalAmount).append("\n");
+        result.append("You earned ").append(frequentRenterPoints).append(" frequent renter points");
 
-        return result;
+        return result.toString();
     }
+
+    public String generateHtmlStatement() {
+        double totalAmount = 0;
+        int frequentRenterPoints = 0;
+        StringBuilder result = new StringBuilder("<h1>Rental Record for <em>" + getName() + "</em></h1>\n");
+        result.append("<table>\n");
+
+        for (Rental rental : _rentals) {
+            double thisAmount = rental.getMovie().getCharge(rental.getDaysRented());
+            frequentRenterPoints += rental.getMovie().getFrequentRenterPoints(rental.getDaysRented());
+
+            result.append("  <tr><td>").append(rental.getMovie().getTitle())
+                    .append("</td><td>").append(thisAmount).append("</td></tr>\n");
+
+            totalAmount += thisAmount;
+        }
+
+        result.append("</table>\n");
+        result.append("<p>Amount owed is <em>").append(totalAmount).append("</em></p>\n");
+        result.append("<p>You earned <em>").append(frequentRenterPoints).append("</em> frequent renter points</p>");
+
+        return result.toString();
+    }
+
 }

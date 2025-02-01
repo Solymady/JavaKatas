@@ -2,28 +2,38 @@ package katas.exercises;
 
 import java.util.*;
 
-/**
- * You are given the reference to a node in a directed graph, where each node contains a unique integer
- * value and a list of neighbors (outgoing edges).
- *
- * Your task is to write a function to clone the entire graph, creating a deep copy.
- *
- * - Ensure the cloned graph has the same structure and values as the original graph.
- * - The function should handle graphs with cycles.
- *
- */
 class GraphCloner {
-
-
-
     /**
-     * Clones a directed graph.
+     * Clones a directed graph using BFS.
      *
      * @param node the starting node of the graph to clone
      * @return the starting node of the cloned graph
      */
     public static Node cloneGraph(Node node) {
-        return null;
+        if (node == null) return null;
+
+        // Map to track cloned nodes
+        Map<Node, Node> map = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(node);
+
+        // Clone the first node
+        map.put(node, new Node(node.val));
+
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
+
+            for (Node neighbor : current.neighbors) {
+                // If the neighbor hasn't been cloned, clone and queue it
+                if (!map.containsKey(neighbor)) {
+                    map.put(neighbor, new Node(neighbor.val));
+                    queue.add(neighbor);
+                }
+                // Connect cloned node to cloned neighbor
+                map.get(current).neighbors.add(map.get(neighbor));
+            }
+        }
+        return map.get(node);
     }
 
     public static void main(String[] args) {
@@ -47,12 +57,7 @@ class GraphCloner {
         printGraph(clonedNode, new HashSet<>());
     }
 
-    /**
-     * Helper function to print the graph.
-     *
-     * @param node the starting node of the graph
-     * @param visited a set to track visited nodes
-     */
+    /** Helper function to print the graph */
     public static void printGraph(Node node, Set<Node> visited) {
         if (node == null || visited.contains(node)) return;
         visited.add(node);
@@ -62,6 +67,7 @@ class GraphCloner {
         }
     }
 
+    /** Node class */
     static class Node {
         public int val;
         public List<Node> neighbors;
@@ -77,4 +83,3 @@ class GraphCloner {
         }
     }
 }
-

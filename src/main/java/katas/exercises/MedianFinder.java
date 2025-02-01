@@ -1,42 +1,42 @@
 package katas.exercises;
 
-/**
- * find the median of a stream of integers.
- *
- * The numbers will be provided one at a time in a dynamic data stream, and after each new number is added,
- * your function should efficiently compute the median of all numbers seen so far.
- *
- * Adding a number: O(log n).
- * Finding the median: O(1) or O(log n).
- *
- * Hint: Consider using two heaps (min-heap and max-heap) to efficiently maintain the order of elements.
- */
+import java.util.Collections;
+import java.util.PriorityQueue;
+
 public class MedianFinder {
+    private PriorityQueue<Integer> left;  // Max-Heap
+    private PriorityQueue<Integer> right; // Min-Heap
 
-    /**
-     * Initializes the MedianFinder object.
-     */
+    /** Initializes the MedianFinder object. */
     public MedianFinder() {
-
+        left = new PriorityQueue<>(Collections.reverseOrder()); // Max-Heap
+        right = new PriorityQueue<>(); // Min-Heap (default)
     }
 
-    /**
-     * Adds a number to the data stream.
-     *
-     * @param num the number to be added
-     */
+    /** Adds a number to the data stream. */
     public void addNum(int num) {
+        // Step 1: Insert into the correct heap
+        if (left.isEmpty() || num <= left.peek()) {
+            left.offer(num);
+        } else {
+            right.offer(num);
+        }
 
+        // Step 2: Balance the heaps
+        if (left.size() > right.size() + 1) {
+            right.offer(left.poll());  // Move element from left → right
+        } else if (right.size() > left.size()) {
+            left.offer(right.poll());  // Move element from right → left
+        }
     }
 
-    /**
-     * Finds and returns the median of the data stream.
-     *
-     * @return the median as a double
-     */
+    /** Finds and returns the median of the data stream. */
     public double findMedian() {
-
-        return 0.0;
+        if (left.size() > right.size()) {
+            return left.peek();  // Odd count, return middle element
+        } else {
+            return (left.peek() + right.peek()) / 2.0; // Even count, return avg of two middles
+        }
     }
 
     public static void main(String[] args) {
@@ -50,6 +50,9 @@ public class MedianFinder {
         System.out.println("Median: " + medianFinder.findMedian());
 
         medianFinder.addNum(5);
+        System.out.println("Median: " + medianFinder.findMedian());
+
+        medianFinder.addNum(4);
         System.out.println("Median: " + medianFinder.findMedian());
     }
 }
